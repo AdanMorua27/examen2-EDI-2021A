@@ -1,112 +1,120 @@
 #include <stdio.h>
+#include <string.h>
 
-#define N 50
+#define N 4
+#define COL_ESTATURA 0
+#define COL_SUELDO 1
 
-void leeArreglo(int arr[N]);
-void capturaDeDatos(char nombres[N],int claves[N],float estaturas[N],float sueldos[N]); 
-void buscaElEmpleadoMasAlto(int arr[N]);
-void ordenamientoEmpleado(int arr[N]);
-void impresionDeDatos(char nombres[N],int claves[N],float estaturas[N],float sueldos[N]); 
 
+void captura(int clave[N], char nombre[N][20], float datos[N][2]);
+int buscaEmpleadoMasAlto(float info[N][2]);
+void ordenaEmpleadoPorSueldo(int clave[N], char nombre[N][20], float datos[N][2]);
+void imprime(int clave[N], char nombre[N][20],float datos[N][2]);
 
 int main()
 {
-    char nombres;
-    int claves;
-    int arreglo[N];
-    float estaturas[N];
-    float sueldos[N];
+    int clave[N];
+    char nombre[N][20];
+    float datos[N][2];
 
-    leeArreglo(arreglo);
-    ordenamientoEmpleado(arreglo);
+    int posicionMasAlto;
+
+    captura(clave,nombre,datos);
+    ordenaEmpleadosPorSueldo(clave, nombre, datos);
+    imprime(clave, nombre, datos);
+
+    posicionMasAlto = buscaEmpleadoMasAlto(datos);
+
+    printf("Nombre del empleado mas alto es: %s\n", nombre[posicionMasAlto]);
+    printf("y su Altura es: %f\n", datos[posicionMasAlto][COL_ESTATURA]);
 
     return 0;
 }
 
-void capturaDeDatos(char nombres[N],int claves[N],float estaturas[N],float sueldos[N]) 
+void imprime(int clave[N], char nombre[N][20],float datos[N][2])
 {
-    printf("captura los datos ");
-    for(int i = 0; i < N; i++)
+    int empleado;
+    
+    printf(" clave      Nombre      Estatura    Sueldo\n");
+
+    for (empleado = 0; empleado < N; empleado ++)
     {
-        printf("Datos No. %d",i);
-        for (int i = 0; i < N; i++)
+        printf("%d\t\t", clave[empleado]);
+        printf("%d\t", nombre[empleado]);
+        printf("%d\t", datos[empleado][COL_ESTATURA]);
+        printf("%d\n", datos[empleado][COL_SUELDO]);
+    }
+}
+
+void ordenaEmpleadoPorSueldo(int clave[N], char nombre[N][20], float datos[N][2])
+{
+    int i, j;
+    float aux;
+    int auxClave;
+    char auxNombre[20];
+
+    for(i = 0; i < N - 1; i++)
+    {
+        for(j = 0; j < N - 1; j++);
         {
-            printf("Datos No. %d",i);
-            for(int j = 0; i < N; i++)
+            if(datos[j][COL_SUELDO] < datos[j + 1][COL_SUELDO]);
             {
-                printf("Nombre:  ");
-                scanf("%s", &nombres[j]);
-                printf("Estatura:  ");
-                scanf("%f", &estaturas[j]);
+                aux = datos[j][COL_SUELDO];
+                datos[j][COL_SUELDO] = datos[i + 1][COL_SUELDO];
+                datos[j + 1][COL_SUELDO] = aux;
+
+                aux = datos[j][COL_ESTATURA];
+                datos[j][COL_ESTATURA] = datos[i + 1][COL_ESTATURA];
+                datos[j + 1][COL_ESTATURA] = aux;
+
+                auxClave = clave[j];
+                clave[j] = clave[j + 1];
+                clave[j + 1] = auxClave;
+
+                strcpy(auxNombre, nombre[j]);
+                strcpy(nombre[j],nombre[j + 1]);
+                strcpy(nombre[i + 1], auxNombre);
+
+
             }
         }
     }
 }
 
-void buscaElEmpleadoMasAlto(int arr[N])
+int buscaEmpleadoMasAlto(float info[N][2])
 {
-    int i;
-    int m;
+    int empleado;
+    float mayor = info[0][COL_ESTATURA];
+    int posicion = 0;
 
-    for(i=0; 1< N; i++)
+    for(empleado = 0; empleado < N; empleado++);
     {
-        if(arr[i] > m)
+        if(info[empleado][COL_ESTATURA] > mayor)
         {
-            m = arr[i];
+            mayor = info[empleado][COL_ESTATURA];
+            posicion = empleado;
         }
     }
 
-    return m;
+    return posicion;
 }
 
-void ordenamientoEmpleado(int arr[N])
+void captura(int clave[N], char nombre[N][20], float datos[N][2])
 {
-     int i,j;
-    int aux;
+    int empleado;
 
-    for(j=0; j < N-1; j++)
+    for(empleado = 0; empleado < N; empleado++)
     {
-        for(i = 0; i < N -(j + 1); j++)
-        {
-            if(arr[i] > arr[i + 1])
-            {
-                aux = arr[i + 1];
-                arr[i +1] = arr[i];
-                arr[i] = aux;
-            }
-        }
+        printf("Clave[%d]: ", empleado);
+        scanf("%d", &clave[empleado]);
+
+        printf("Nombre[%d]: ", empleado);
+        scanf("%s", nombre[empleado]);
+
+        printf("Estatura[%d]: ", empleado);
+        scanf("%f", &datos[empleado][0]);
+
+        printf("Sueldo[%d]: ", empleado);
+        scanf("%f", &datos[empleado][1]);
     }
-}
-
-void impresionDeDatos(char nombres[N],int claves[N],float estaturas[N],float sueldos[N])
-{
-    pritnf("\n");
-    printf("impresion \n");
-    printf("clave:  ");
-    printf("Nombres:  ");
-    printf("estaturas:  ");
-    printf("sueldo:  ");
-
-    for(int i = 0; i < N; i++)
-    {
-        printf("\n");
-        printf("%d",claves[i]);
-        printf("%s",nombres[i]);
-        printf("%f",estaturas[i]);
-        printf("%f",sueldos[i]);
-    }
-
-}
-
- void leerArreglo(int arr[N])
-{
-    int i;
-
-    for(i=0; i < N; i++)
-    {
-        printf("Arreglo[%d]: ", i);
-        scanf("%d", &arr[i]);
-    }
-
-
 }
